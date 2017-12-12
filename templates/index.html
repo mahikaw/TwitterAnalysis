@@ -7,7 +7,7 @@
    <!--- Basic Page Needs
    ================================================== -->
    <meta charset="utf-8">
-  <title>TWITTERATI~ tweet analysis</title>
+  <title>TwitterAnalysis</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -32,6 +32,11 @@
    <!-- Favicons
   ================================================== -->
   <link rel="shortcut icon" href="../static/favicon.png" >
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+
+  
 
 
 </head>
@@ -95,18 +100,17 @@
 
       <div class="twelve columns">
           
-        <h1>TWITTERATI</h1>
+        <h1>TWITTER ANALYSIS</h1>
 
-        <p>Detailled analysis of tweets on Indian PM Narendra Modi and Delhi CM Arvind Kejriwal</p>
+        <p>Detailled analysis of tweets on Mumbai rains and Delhi Pollution</p>
         <br><br><br>
         <h5>Quick stats.</h5>
 
         <div id="counter" class="cf">
-            <span>{{tweets_Total}}<em>tweets</em></span> 
+          <span>{{tweets_Total}}<em>tweets</em></span> 
           <span>{{retweet_total}}<em>retweets</em></span>
           <span>{{favorite_count}}<em>favourite count</em></span>
-<!--            <span>Modi<em>is more popular in Delhi</em></span> 
- -->        </div>  
+       </div>  
         
         <!-- Begin MailChimp Signup Form -->
    
@@ -139,21 +143,17 @@
               <i class="fa fa-group"></i>
           </div>
 
-           <h1>About TWITTERATI</h1>
+           <h1>About TwitterAnalysis</h1>
 
            <p class="lead">
-           TWITTERATI is a Twitter analysis tool focus on Indian PM Narendra Modi and Delhi CM Arvind Kejriwal. 
+           TwitterAnalysis is a tool to analyse the recent Delhi pollution crises and Mumbai rains. 
            </p>
-           <h3>
-            Who is more popular in the state of Delhi?
-           </h3>
-           <h3>
-           Arvind Kejriwal or Narendra Modi?
-           </h3>
-           <div id="diff_bar" align="center" style="padding-bottom: 75px;padding-top: 75px">
 
-      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-      <script type="text/javascript">
+ <!-- tweets distibution among delhi and mumbai-->         
+ <div id="diff_bar" align="center" style="padding-bottom: 75px;padding-top: 75px">
+
+<!--       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+ -->      <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
        
       google.charts.setOnLoadCallback(drawChart);
@@ -161,18 +161,25 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['person', 'count', { role: "style" }],
-          ['Arvind Kejriwal', {{tweet_arvind_count}}, "color: orange"],
-          ['Narendra Modi', {{tweet_modi_count}}, "color: red"],
+          ['Delhi', {{tweet_arvind_count}}, "color: orange"],
+          ['Mumbai', {{tweet_modi_count}}, "color: red"],
         ]);
 
 
 
         var options = {
-        title: "Who is more popular?",
+        title: "What has been more trending on twitter? The tweet count on the 2 topics:",
         width: 600,
         height: 400,
         bar: {groupWidth: "95%"},
-        legend: { position: "none" },
+        backgroundColor: { fill:'transparent' },
+        titleTextStyle:{color: 'white'},
+        hAxis: {
+        textStyle:{color: '#FFF'}
+        },
+        vAxis: {
+        textStyle:{color: '#FFF'}
+        },
       };
 
         var chart = new google.visualization.ColumnChart(document.getElementById('diff_bar'));
@@ -182,14 +189,13 @@
     </script>
   </div>
 
+
+
          </div>
 
-      </div> <!-- end section-header -->              
-      
+      </div>
 
-       
-       
-     
+<!-- trending hashtags -->
       <div style="background: black;padding-top: 30px;padding-bottom: 100px">
         <img src="../static/images/trending.png" style="float: right;width: 100px; padding-right: 20px ">
         <h1 align="center" style="font-weight: bold; color: white;padding-bottom: 100px;">Trending hashtags</h1>
@@ -206,24 +212,24 @@
 } -->
          
         <tr>
-          <td style="padding-right: 100px">#narendramodi</td>
-          <td>{{trending}}</td>
+          <td style="padding-right: 100px">#{{trends[0]}}</td>
+          <td>#{{trends[1]}}</td>
         </tr>
         <tr>
-          <td></td>
-          <td>#namo</td>
+          <td>#{{trends[2]}}</td>
+          <td>#{{trends[3]}}</td>
         </tr>
         <tr>
-          <td>#kejriwal</td>
-          <td>#pmmodi</td>
+          <td>#{{trends[4]}}</td>
+          <td>#{{trends[5]}}</td>
         </tr>
         <tr>
-          <td>#modisarkar</td>
-          <td>#modiinIsrael</td>
+          <td>#{{trends[6]}}</td>
+          <td>#{{trends[7]}}</td>
         </tr>
         <tr>
-          <td>#Modiravels</td>
-          <td>#kejriruinsdili</td>
+          <td>#{{trends[8]}}</td>
+          <td>#{{trends[9]}}</td>
         </tr>
           
         </table>
@@ -233,71 +239,83 @@
 
 
 
-
-       <div style="background: #0FC5DF;">
-        <h1 align="center" style="font-weight: bold; color: black;padding-top: 75px;">Tweets v/s Retweets</h1>
-        
-
-        <div id="tweet_bar" align="center" style="padding-bottom: 75px;padding-top: 75px">    
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<!-- distribution retweet vs tweet -->
+<div id="contain">
+      <div id="tweet_bar">    
       <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Tweet/retweet', 'count'],
+          ['Tweets', {{tweets_Total}}],
+          ['Retweets', {{retweet_total}}],]);
+        // var view = new google.visualization.DataView(data);
+        // view.setColumns([0, 1,
+        //                { calc: "stringify",
+        //                  sourceColumn: 1,
+        //                  type: "string",
+        //                  role: "annotation" }]);
+        var options = {
+        title: "Analysis of tweets v/s retweets",
+        width: 500,
+        height: 400,
+        backgroundColor: { fill:'transparent' },
+        titleTextStyle:{color: 'white'},
+         hAxis: {textStyle:{color: '#FFF'}},vAxis: {textStyle:{color: '#FFF'}
+        },bar: {groupWidth: "50%"},
+         legend: { position: "none" },
+      };
+        var chart = new google.visualization.ColumnChart(document.getElementById('tweet_bar'));
+        chart.draw(data, options);
+      }
+    </script>
+    </div>
+    <!-- favourite count -->
+     <div id="fav_bar" align="right">
+     <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+     
+        function drawChart() {
+          var data = google.visualization.arrayToDataTable([
+          ['person', 'count', { role: "style" }],
+          ['Delhi', {{delhi_favorite_count}}, "color: orange"],
+          ['Mumbai', {{mumbai_favorite_count}}, "color: red"],
+        ]);
+        var options = {
+        title: "Analysis of favourite counts",
+        width: 500,
+        height: 400,
+        backgroundColor: { fill:'transparent' },
+        titleTextStyle:{color: 'white'},
+         hAxis: {textStyle:{color: '#FFF'}},vAxis: {textStyle:{color: '#FFF'}
+        },bar: {groupWidth: "50%"},
+ legend: { position: "none" },};
+        var chart = new google.visualization.ColumnChart(document.getElementById('fav_bar'));
+        chart.draw(data, options);
+      }
+    </script>
+       
+  
+  </div>
+</div>
+
+   
+
+
+   
+
+  <div style="background: black">
+  <!-- types of tweets
+ -->  
+<div id="tweet_type_pie" align="center" style="padding-top: 50px">   
+ <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
        
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Tweet/retweet', 'count'],
-          ['Tweets', {{tweets_Total}}],
-          ['Retweets', {{retweet_total}}],
-        ]);
-
-        var view = new google.visualization.DataView(data);
-        view.setColumns([0, 1,
-                       { calc: "stringify",
-                         sourceColumn: 1,
-                         type: "string",
-                         role: "annotation" }]);
-
-        var options = {
-        title: "Analysis of tweets v/s retweets",
-        width: 600,
-        height: 400,
-        bar: {groupWidth: "95%"},
-        legend: { position: "none" },
-        background: "black",
-      };
-
-        var chart = new google.visualization.ColumnChart(document.getElementById('tweet_bar'));
-
-        chart.draw(data, options);
-      }
-    </script>
-  </div>
-
-
-    </div>
-
-
-
-
-
-<!-- types of tweets
- -->      
-
-    <div style="background: black">
-      <h1 align="center" style="font-weight: bold; color: white;padding-top: 75px">Types of tweets</h1>
-      <div id="tweet_type_pie" align="center" style="padding-bottom: 75px;padding-top: 75px">
-    
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-
-
-
         var data = google.visualization.arrayToDataTable([
           ['type','count'],
           ['image tweets',{{image_count}}],
@@ -308,9 +326,12 @@
         var options = {
           title: 'Tweet types',
           titleTextStyle:{color: 'white'},
-          width: 700,
-          height: 700,
-          align:'center'
+          backgroundColor: { fill:'transparent' },
+          width: 650,
+          height: 550,
+          is3D: true,
+          legend: {textStyle: {color: 'white'}},
+          align:'left'
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('tweet_type_pie'));
@@ -319,69 +340,374 @@
       }
     </script>
   </div>
-</div>
+<!-- delhi v/s non-delhi comparison-->  
+ <div id="comparison_delhi" align="right">
+  <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-
-
-      <div>
-        <h1 align="center" style="font-weight: bold; color: black;padding-top: 75px;padding-bottom: 75px">Distribution of tweets location wise </h1>
-          <h2 style="float: left;padding-left: 100px">Arvind Kejriwal</h2>
-          <h2 style="float: right;padding-right: 100px">Narendra Modi</h2>
-          <br><br><br>
-      <div id="regions_div_namo">
-    
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-      google.charts.load('current', {
-        'packages':['geochart'],
-        // Note: you will need to get a mapsApiKey for your project.
-        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-        'mapsApiKey': 'AIzaSyAe_Q8nT2sX8ZuShgnvVUcjEAV8lazIJGw'
-      });
-      google.charts.setOnLoadCallback(drawRegionsMap);
-
-      function drawRegionsMap() {
-        var data = google.visualization.arrayToDataTable([{{m_location}}]);
-
-        var options =  {colorAxis: {colors: ['#ffff00', '#FFA500', '#e31b23']}, backgroundColor: 'black',defaultColor: '#81d4fa',};
-
-        var chart = new google.visualization.GeoChart(document.getElementById('regions_div_namo'));
-
-        chart.draw(data, options);
-      }
-      document.write({{m_location}})
-    </script>
-<!--     <p>{{m_location}}</p>
- -->  </div>
-  <div id="regions_div_kejri">  
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {
-        'packages':['geochart'],
-        // Note: you will need to get a mapsApiKey for your project.
-        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-        'mapsApiKey': 'AIzaSyAe_Q8nT2sX8ZuShgnvVUcjEAV8lazIJGw'
-      });
-      google.charts.setOnLoadCallback(drawRegionsMap);
-
-      function drawRegionsMap() {
+      function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Country', 'Tweets count'],
-          ['Germany', 200],
-          ['United States', 300],
-          ['Brazil', 400],
-          ['Canada', 500],
-          ['France', 600],
-          ['RU', 700]
+          ['Non-Delhi/Delhi', 'count', { role: "style" }],
+          ['Delhi', delhi,"color: orange"],
+          ['Non-Delhi', non_delhi,"color: red"],
         ]);
 
-        var options =  {colorAxis: {colors: ['#ffff00', '#FFA500', '#e31b23']}, backgroundColor: 'black',defaultColor: '#81d4fa',};
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" }]);
 
-        var chart = new google.visualization.GeoChart(document.getElementById('regions_div_kejri'));
+        var options = {
+        title: "Comparison of delhi v/s non-delhi twitter users",
+        titleTextStyle:{color: 'white'},
+        width: 600,
+        height: 400,
+        backgroundColor: { fill:'transparent' },
+        bar: {groupWidth: "50%"},
+        hAxis: {
+        textStyle:{color: '#FFF'}
+        },
+        vAxis: {
+        textStyle:{color: '#FFF'},
+        },
+        legend: { position: "none" },
 
+      };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('comparison_delhi'));
         chart.draw(data, options);
       }
     </script>
+  </div>
+
+  <!-- mumbai v/s non-mumbai comparison
+ -->  
+ <div id="comparison_mumbai" align="left">
+  <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Non-Mumbai/Mumbai', 'count',{ role: "style" }],
+          ['Mumbai', mumbai,"color: orange"],
+          ['Non-Mumbai', non_mumbai,"color: red"],
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" }]);
+
+        var options = {
+        title: "Comparison of mumbai v/s non-mumbai twitter users",
+        titleTextStyle:{color: 'white'},
+        width: 600,
+        height: 400,
+        backgroundColor: { fill:'transparent' },
+        bar: {groupWidth: "50%"},
+         legend: { position: "none" },
+        hAxis: {
+        textStyle:{color: '#FFF'}
+        },
+         vAxis: {
+        textStyle:{color: '#FFF'}
+        }
+      };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('comparison_mumbai'));
+        chart.draw(data, options);
+      }
+    </script>
+  </div>
+
+
+</div>
+<!-- ............................................................... -->
+<style>
+
+.links line {
+  stroke: #FFF;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #000;
+  stroke-width: 0.5px;
+}
+
+</style>
+<h2 style="color: white;text-align: center;">Mumbai rains~ Twitter user Networks</h2>
+<svg id="svg_delhi" width="1500" height="600"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+var simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody().strength(-0.4))
+    .force("center", d3.forceCenter(width / 2.5, height / 2));
+
+d3.json("../static/users.json", function(error, graph) {
+  if (error) throw error;
+  var link = svg.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+  var node = svg.append("g")
+      .attr("class", "nodes")
+    .selectAll("circle")
+    .data(graph.nodes)
+    .enter().append("circle")
+      .attr("r", 3.5)
+      .attr("fill", function(d) { return color(d.group); })
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+
+  // node.append("title")
+  //     .text(function(d) { return d.id; });
+  node.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.id });
+
+  simulation
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+  console.log("mahika "+graph.links);
+
+  simulation.force("link")
+      .links(graph.links);
+
+  function ticked() {
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+  }
+});
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+</script>
+<!-- ............................................................... -->
+<!-- <style type="text/css">
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+</style>
+<h1>12467</h1>
+<svg id="svg_mumbai" width="960" height="600"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+var simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2));
+
+d3.json("../static/users.json", function(error, graph) {
+  if (error) throw error;
+
+  var link = svg.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+  var node = svg.append("g")
+      .attr("class", "nodes")
+    .selectAll("circle")
+    .data(graph.nodes)
+    .enter().append("circle")
+      .attr("r", 5)
+      .attr("fill", function(d) { return color(d.group); })
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+
+  node.append("title")
+      .text(function(d) { return d.id; });
+
+  simulation
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+
+  simulation.force("link")
+      .links(graph.links);
+
+  function ticked() {
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+  }
+});
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+</script>
+ -->
+
+<!-- location-wise distribution -->
+      <div>
+          <h2 style="float: left;padding-left: 100px;color: white;">Delhi Pollution</h2>
+          <h2 style="float: right;padding-right: 100px;color:white;">Mumbai Rains</h2>
+          <br><br><br>
+<div id="regions_div_mumbai">
+    
+ <script type="text/javascript">
+      google.charts.load('current', {
+        'packages':['geochart'],
+        'mapsApiKey': 'AIzaSyAe_Q8nT2sX8ZuShgnvVUcjEAV8lazIJGw'
+      });
+      google.charts.setOnLoadCallback(drawRegionsMap);
+      var n={{mum_json | safe}};
+    var b=[['Place','Tweet Count']];
+    var mumbai=0, non_mumbai=0;
+   for (j in n) {
+    var temp=[];
+    if(j!='null'){
+      if(j=='Mumbai'){
+        mumbai=n[j];
+      }
+      else{
+        non_mumbai=non_mumbai+n[j];
+      }
+    temp.push(j);
+    temp.push(n[j]);
+     b.push(temp);
+   }}
+    console.log(non_mumbai+" "+mumbai);
+function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable(b);
+        var options = {
+        backgroundColor: { fill:'black' },
+        region: 'world',
+        enableRegionInteractivity: true,
+        sizeAxis: { minValue: 0, maxValue: 100 },
+        displayMode: 'markers',
+        colorAxis: {colors: ['#FFBE33','#FA9C31','red']} 
+      };
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div_mumbai'));
+        chart.draw(data, options);
+      }
+    </script>
+ </div>
+ 
+
+ <div id="regions_div_delhi">    
+   <script type="text/javascript">
+    var m={{del_json | safe}};
+    var a=[['Place','Tweet Count']];
+    var non_delhi=0,delhi=0;
+   for (k in m) {
+    var temp=[];
+    if(k!='null'){
+      if(k=='New Delhi'){
+        delhi=m[k];
+      }
+      else{
+        non_delhi=non_delhi+m[k];
+      }
+    temp.push(k);
+    temp.push(m[k]);
+   	 a.push(temp);
+   }
+ }
+ console.log(non_delhi+" "+delhi);
+   
+    // document.getElementById("mah").innerHTML=m;
+      google.charts.load('current', {
+        'packages':['geochart'],
+        'mapsApiKey': 'AIzaSyAe_Q8nT2sX8ZuShgnvVUcjEAV8lazIJGw'
+      });
+      google.charts.setOnLoadCallback(drawRegionsMap);
+    function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable(a);
+        var options = {
+        backgroundColor: { fill:'black' },
+        region: 'world',
+        enableRegionInteractivity: true,
+        sizeAxis: { minValue: 0, maxValue: 100 },
+        displayMode: 'markers',
+        colorAxis: {colors: ['green', 'blue']} // orange to blue
+      };
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div_delhi'));
+        chart.draw(data, options);
+      }
+
+    </script>
+ 
+
   </div>
       </div>
         
@@ -466,9 +792,9 @@
    <!-- <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script> -->
    <script type="text/javascript" src="../static/js/jquery-migrate-1.2.1.min.js"></script>
 
-<!--  <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
- -->   <script src="../static/js/gmaps.js"></script>
-   <script src="../static/js/waypoints.js"></script>
+ <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
+<!--    <script src="../static/js/gmaps.js"></script>
+ -->   <script src="../static/js/waypoints.js"></script>
    <script src="../static/js/jquery.countdown.js"></script>
    <script src="../static/js/jquery.placeholder.js"></script>
    <script src="../static/js/backstretch.js"></script>  

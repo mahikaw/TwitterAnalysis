@@ -52,11 +52,6 @@ jQuery(document).ready(function($) {
   	});
 
 
-/*----------------------------------------------------*/
-/* Backstretch Settings
------------------------------------------------------- */
-
-	$("#intro").backstretch("images/header-background.jpg");
 
 
 /*----------------------------------------------------*/
@@ -85,87 +80,6 @@ jQuery(document).ready(function($) {
 	$('input, textarea').placeholder()
 
 
-/*----------------------------------------------------*/
-/* FitText Settings
------------------------------------------------------- */
-   setTimeout( function() {
-
-	   $('h1.responsive-headline').fitText(1, { minFontSize: '40px', maxFontSize: '90px' });
-	   
-   }, 100);
-
-/*----------------------------------------------------*/
-/* Final Countdown Settings
------------------------------------------------------- */
-	var finalDate = '2016/01/01';
-
-	$('div#counter').countdown(finalDate)
-   	.on('update.countdown', function(event) {
-
-   		$(this).html(event.strftime('<span>%D <em>days</em></span>' + 
-   										 	 '<span>%H <em>hours</em></span>' + 
-   										 	 '<span>%M <em>minutes</em></span>' +
-   										 	 '<span>%S <em>seconds</em></span>'));
-
-   });  
-
-
-/*----------------------------------------------------*/
-/*	gmaps settings
-------------------------------------------------------*/
-
-   var map;
-
-   // main directions
-   map = new GMaps({
-      el: '#map', 
-      lat: 14.549072, 
-      lng: 121.046958, 
-      zoom: 14, 
-      zoomControl : true,
-      zoomControlOpt: { style : 'SMALL', position: 'TOP_LEFT' }, 
-      panControl : false, 
-      scrollwheel: false
-   });
-
-   map.drawOverlay({
-	   lat: map.getCenter().lat(),
-	   lng: map.getCenter().lng(),
-	   content: '<i class="fa fa-map-marker"></i>',
-	   verticalAlign: 'top',
-	   horizontalAlign: 'center'
-	});
-
-   // The styles below present a simplified map. 
-   // If you would like to use a normal coloured map, then please remove or comment the code below, from lines 128 to 148.
-	var mapStyles = [
-	   {
-	      featureType: "road",
-	      elementType: "geometry",
-	      stylers: [{
-	         lightness: 100
-	      }, {
-	         visibility: "simplified"
-	      }]
-	   }, {
-	      featureType: "road",
-	      elementType: "labels",
-	      stylers: [{
-	         visibility: "off"
-	      }]
-	   }
-	];
-	
-	map.setOptions({
-	   styles: mapStyles
-	});
-
-   // map.addMarker({ 
- 		// lat: map.getCenter().lat(),
-	  //  lng: map.getCenter().lng(), 
- 		// title: '5th Avenue',
-   //  	infoWindow: { content: '<p>You can add your address 1 here</p>' } 
-   // });
 
 
 /*----------------------------------------------------*/
@@ -224,7 +138,6 @@ jQuery(document).ready(function($) {
         $('#intro, #map').css({ 'height': $(window).height() });
         $('body').css({ 'width': $(window).width() })
 
-        $("#intro").backstretch("images/header-background.jpg");
    });
 
 
