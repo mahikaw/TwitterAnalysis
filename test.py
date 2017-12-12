@@ -143,7 +143,7 @@ def hello_world():
 
     
 if __name__ == '__main__':
-        app.run(debug=True,use_reloader=True)
+        app.run(host='35.197.138.123:5000',debug=True,use_reloader=True)
 
 
 
